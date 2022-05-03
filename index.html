@@ -1,0 +1,34 @@
+<head>
+    <meta charset="utf-8">
+    <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="./main.js"></script>
+
+    <title>font-to-svg</title>
+    <meta name="description" content="文字をSVGに変換するツール">
+
+    <link rel="stylesheet" type="text/css" href="index.css" />
+</head>
+<body>
+    <div id="main">
+        <h1>Font to SVG</h1>
+        <div class="container">
+            <h2>フォント</h2>
+            <p class="button" id="uploadFont" onclick="uploadFont()">ファイルをアップロード</p>
+            <span id="fontFile"></span>
+            <h2>使う文字</h2>
+            <div id="charsToUse">
+                <textarea id="chars"></textarea>
+                <div id="checkboxes">
+                    <div class="checkbox" id="number" onclick="checkboxClicked('number')">数字</div>
+                    <div class="checkbox" id="uppercaseAlphabet" onclick="checkboxClicked('uppercaseAlphabet')">abc</div>
+                    <div class="checkbox" id="lowercaseAlphabet" onclick="checkboxClicked('lowercaseAlphabet')">ABC</div>
+                    <div class="checkbox" id="symbol1" onclick="checkboxClicked('symbol1')">記号1</div>
+                    <div class="checkbox" id="symbol2" onclick="checkboxClicked('symbol2')">記号2</div>
+                    <div class="checkbox" id="hiragana" onclick="checkboxClicked('hiragana')">ひらがな</div>
+                    <div class="checkbox" id="katakana" onclick="checkboxClicked('katakana')">カタカナ</div>
+                    <div class="checkbox" id="kanji1" onclick="checkboxClicked('kanji1')">漢字 / JIS第1水準</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

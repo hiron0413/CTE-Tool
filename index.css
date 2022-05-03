@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Noto+Sans+JP:wght@300,400,700&display=swap');
+
+body {
+    margin: 0em;
+    width: 80%;
+    max-width: 1000px;
+    margin:auto;
+    background: #f4fff5;
+}
+
+#main {
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3em;
+    text-align: center;
+    padding: 0.7em;
+    color: rgb(255, 255, 255);
+    background: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
+}
+
+h2 {
+    width: 15em;
+    padding-left: 16px;
+    padding-bottom: 5px;
+    color: rgb(53, 53, 53);
+    border-bottom: 5px solid #cbf1a0;
+}
+
+#uploadFont {
+    padding: 10px 10px;
+    text-align: center;
+    font-weight: 500;
+    border-radius: 3px;
+    border-color: rgb(0, 218, 152);
+    border: solid;
+    width: 12em;
+    color: rgb(0, 218, 152);
+
+}
+
+textarea {
+    resize: vertical;
+    appearance: none;
+    width: 100%;
+    height: 15em;
+    padding: 10px 10px;
+    background: #f4fff5;
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0 0 0 2px rgb(198, 223, 215) inset;
+}
+
+textarea:focus {
+    outline: 0;
+    box-shadow: 0 0 0 3px rgb(0, 218, 152) inset;
+}
+
+#checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.checkbox {
+    font-size: 1.1em;
+    margin: 5px ;
+    padding: 10px 20px;
+    border-radius: 3px;
+    border: 2px rgb(198, 223, 215) solid;
+    color: rgb(53, 53, 53);
+}
