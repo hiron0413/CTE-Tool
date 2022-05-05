@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Noto+Sans+JP:wght@300,400,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+JP:wght@300;400;500;700&family=Roboto+Mono:wght@400&display=swap');
 
 body {
     margin: 0em;
@@ -10,6 +10,7 @@ body {
 
 #main {
     font-family: 'Noto Sans JP', sans-serif;
+    margin-bottom: 30px;
 }
 
 h1 {
@@ -17,45 +18,83 @@ h1 {
     font-size: 3em;
     text-align: center;
     padding: 0.7em;
-    color: rgb(255, 255, 255);
-    background: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
+    color: #ffffff;
+    background: linear-gradient(-145deg, #cafc79 0%, #00da98 100%);
 }
 
 h2 {
     width: 15em;
+    margin-top: 30px;
+    margin-bottom: 20px;
     padding-left: 16px;
     padding-bottom: 5px;
-    color: rgb(53, 53, 53);
-    border-bottom: 5px solid #cbf1a0;
+    color: #353535;
+    border-bottom: 5px solid #d2eee6;
+}
+
+p {
+    color: #353535;
+}
+
+button {
+    font-size: 1.3em;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 500;
+    padding: 10px 20px;
+    margin-top: 50px;
+    width: 100%;
+    text-align: center;
+    border-radius: 3px;
+    border-style: solid;
+    border-color: #00da98;
+    color: #f4fff5;
+    background: #00da98;
+    user-select: none;
+    cursor: pointer;
 }
 
 #uploadFont {
-    padding: 10px 10px;
-    text-align: center;
-    font-weight: 500;
-    border-radius: 3px;
-    border-color: rgb(0, 218, 152);
-    border: solid;
-    width: 12em;
-    color: rgb(0, 218, 152);
+    display: none;
+}
 
+.file {
+    display:inline-block;
+    font-size: 1.1em;
+    font-weight: 500;
+    padding: 10px 20px;
+    text-align: center;
+    border-radius: 3px;
+    border-color: #00da98;
+    color: #f4fff5;
+    background: #00da98;
+    user-select: none;
+}
+
+#fontFile {
+    margin-left: 10px;
+    color: #40504b;
+    font-size: 1.1em;
+    font-weight: 500;
 }
 
 textarea {
     resize: vertical;
     appearance: none;
+    font-family: 'Roboto Mono', 'Noto Sans JP', monospace;
+    font-size: 1em;
+    word-break: break-all;
     width: 100%;
     height: 15em;
     padding: 10px 10px;
     background: #f4fff5;
     border-radius: 3px;
     border: none;
-    box-shadow: 0 0 0 2px rgb(198, 223, 215) inset;
+    box-shadow: 0 0 0 2px #c6dfd7 inset;
 }
 
 textarea:focus {
     outline: 0;
-    box-shadow: 0 0 0 3px rgb(0, 218, 152) inset;
+    box-shadow: 0 0 0 3px #00da98 inset;
 }
 
 #checkboxes {
@@ -66,9 +105,33 @@ textarea:focus {
 
 .checkbox {
     font-size: 1.1em;
-    margin: 5px ;
+    font-weight: 500;
+    margin: 10px 10px 0px 0px;
     padding: 10px 20px;
     border-radius: 3px;
-    border: 2px rgb(198, 223, 215) solid;
-    color: rgb(53, 53, 53);
+    border: 2px #c6dfd7 solid;
+    color: #c6dfd7;
+    cursor: pointer;
+    user-select: none;
+    display:inline-block;
+}
+
+.option {
+    color: #c6dfd7;
+    border-left: 6px solid;
+    border-color: #c6dfd7;
+    padding: 10px 20px;
+    margin: 5px 0px 15px 0px;
+}
+
+input[type=checkbox] {
+    display: none;
+}
+
+input[type=checkbox]:checked + .checkbox {
+    padding: 10px 20px;
+    border-radius: 3px;
+    border: 2px #00da98 solid;
+    color: #f4fff5;
+    background: #00da98;
 }
