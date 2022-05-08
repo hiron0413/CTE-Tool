@@ -36,12 +36,17 @@ p {
     color: #353535;
 }
 
-button {
+#downloadBtns {
+    padding: 40px 0px 0px;
+}
+
+.download {
+    display: block;
     font-size: 1.3em;
     font-family: 'Noto Sans JP', sans-serif;
     font-weight: 500;
     padding: 10px 20px;
-    margin-top: 50px;
+    margin: 20px 0px;
     width: 100%;
     text-align: center;
     border-radius: 3px;

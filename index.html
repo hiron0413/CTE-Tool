@@ -1,9 +1,11 @@
 <head>
     <meta charset="utf-8">
-    <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
-    <script src="./main.js"></script>
-    <script src="./toSVG.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.15/plugins/export/libs/FileSaver.js/FileSaver.min.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+    
 
     <title>font-to-svg</title>
     <meta name="description" content="文字をSVGに変換するツール">
@@ -41,9 +43,13 @@
             <p class="option" id="option-rect">コスチュームを表示したときに途切れるのを防止するための、480x360pxの透明な長方形を追加します。</p>
             <input type="checkbox" id="replace" name="option" value="replace" checked><label for="replace" class="checkbox">特殊な文字を別の文字列に置換</label>
             <p class="option" id="option-replace">「.」や「/」などの文字を、「-dot」や「-slash」などに置換して出力します。</p>
-            <input type="checkbox" id="txt" name="option" value="txt"><label for="txt" class="checkbox">.txtファイルとして出力</label>
-            <p class="option" id="option-txt">.txtファイルとしてまとめて出力します。それぞれのデータは「-----」という文字列で区切られます。</p>
-            <button>保存</button>
+            <div id="svgs">
+
+            </div>
+            <div id="downloadBtns">
+                <button id="downloadZip" class="download">保存(.zip)</button>
+                <button id="downloadTxt" class="download">保存(.txt)</button>
+            </div>
         </div>
     </div>
 </body>
