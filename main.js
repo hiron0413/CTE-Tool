@@ -13,7 +13,7 @@ const charsets = {
 };
 const replace = {".": "-dot", "/": "-slash", "\\": "-back_slash", ":": "-colon"}
 const type = { ".zip": "application/zip", ".txt": "text/plain", ".sprite3": "application/x.scratch.sprite3" }
-var options = { "rect": true, "replace": true, "uncompressed": true}
+var options = { "rect": true, "replace": true, "uncompressed": false}
 var checked = [];
 var font = {};
 var font_name = "";
@@ -192,7 +192,7 @@ function downloadAsZip(data) {
         type: "base64",
     }
 
-    if (options["compress"]) {
+    if (!options["uncompressed"]) {
         _option.compression = "DEFLATE",
         _option.compressionOptions = {
             level: 6
@@ -240,7 +240,7 @@ function downloadAsSprite(data) {
         mimeType: "application/x.scratch.sprite3",
     }
 
-    if (options["compress"]) {
+    if (!options["uncompressed"]) {
         _option.compression = "DEFLATE",
         _option.compressionOptions = {
             level: 6
@@ -270,17 +270,20 @@ function uid() {
 
 function download(data, file_type) {
     if (file_type === ".zip") {
-        var uri = "data:application/zip;base64," + data;
+        var uri = `data:${type[".zip"]} ;base64,${data}`;
     } else if (file_type === ".sprite3") {
-        const blob = new Blob([data],{ type: type[".zip"] });
+        var blob = data;
         var uri = URL.createObjectURL(blob);
     } else {
-        const blob = new Blob([data],{ type: type[file_type] });
+        var blob = new Blob([data],{ type: type[file_type] });
         var uri = URL.createObjectURL(blob);
     }
     var a = document.createElement("a");
     a.download = font_name + file_type;
     a.href = uri;
+    if (!file_type === ".zip") {
+        a.type = blob.type;
+    }
     document.body.append(a);
     a.click();
     a.remove();
