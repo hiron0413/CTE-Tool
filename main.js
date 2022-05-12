@@ -4,10 +4,12 @@ const charsets = {
     uppercaseAlphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     lowercaseAlphabet: "abcdefghijklmnopqrstuvwxyz",
     symbol1: ".,:;!?|#$%&()-=^~+*@_<>{}[]()\"'\\/",
-    symbol2: "€§±×÷",
+    symbol2: "€¥£₽₹₩¢¤§±×÷√≧≦≠≒≡¶-¥#Ωπτμ⋅∞§",
+    u_greek: "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",
+    l_greek: "αβγδεζηθικλμνξοπρστυφχψω",
     hiragana: "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわゐゑをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉっゃゅょ",
     katakana: "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポァィゥェォッャュョヴ",
-    kanji1: ""
+    kanji1: "一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六引羽雲園遠何科夏家歌画回会海絵外角楽活間丸岩顔汽記帰弓牛魚京強教近兄形計元言原戸古午後語工公広交光考行高黄合谷国黒今才細作算止市矢姉思紙寺自時室社弱首秋週春書少場色食心新親図数西声星晴切雪船線前組走多太体台地池知茶昼長鳥朝直通弟店点電刀冬当東答頭同道読内南肉馬売買麦半番父風分聞米歩母方北毎妹万明鳴毛門夜野友用曜来里理話悪安暗医委意育員院飲運泳駅央横屋温化荷界開階寒感漢館岸起期客究急級宮球去橋業曲局銀区苦具君係軽血決研県庫湖向幸港号根祭皿仕死使始指歯詩次事持式実写者主守取酒受州拾終習集住重宿所暑助昭消商章勝乗植申身神真深進世整昔全相送想息速族他打対待代第題炭短談着注柱丁帳調追定庭笛鉄転都度投豆島湯登等動童農波配倍箱畑発反坂板皮悲美鼻筆氷表秒病品負部服福物平返勉放味命面問役薬由油有遊予羊洋葉陽様落流旅両緑礼列練路和"
 };
 const replace = {".": "-dot", "/": "-slash", "\\": "-back_slash", ":": "-colon"}
 const type = { ".zip": "application/zip", ".txt": "text/plain" }
@@ -113,13 +115,13 @@ class Sprite {
     generateCostumeData(name) {
         const md5_text = md5(name);
         return {
-            "assetId": md5_text,
-            "name": name,
-            "bitmapResolution": 1,
-            "md5ext": md5_text + ".svg",
-            "dataFormat": "svg",
-            "rotationCenterX": 240,
-            "rotationCenterY": 240
+            assetId: md5_text,
+            name: name,
+            bitmapResolution: 1,
+            md5ext: md5_text + ".svg",
+            dataFormat: "svg",
+            rotationCenterX: 240,
+            rotationCenterY: 240
         }
     }
 
@@ -280,7 +282,7 @@ $(function(){
         $("#chars").val(chars);
     });
 
-    $("input[name=option]").on("change", options);
+    $("input[name=option]").on("change", changeOptions);
 
     $(".download").on("click", function() {
         chars = $("#chars").val();
