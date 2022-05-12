@@ -270,7 +270,7 @@ function uid() {
 
 function download(data, file_type) {
     if (file_type === ".zip") {
-        var uri = `data:${type[".zip"]} ;base64,${data}`;
+        var uri = `data:${type[".zip"]};base64,${data}`;
     } else if (file_type === ".sprite3") {
         var blob = data;
         var uri = URL.createObjectURL(blob);
