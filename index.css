@@ -1,10 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+JP:wght@300;400;500;700&family=Roboto+Mono:wght@400&display=swap');
 
 body {
-    margin: 0em;
     width: 80%;
     max-width: 1000px;
-    margin:auto;
+    margin: auto;
     background: #f4fff5;
     -webkit-tap-highlight-color:rgba(0,0,0,0);
 }
@@ -35,6 +34,8 @@ h2 {
 
 p {
     color: #353535;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 #downloadBtns {

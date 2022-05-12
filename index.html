@@ -17,7 +17,7 @@
         <h1>Font to SVG</h1>
         <div class="container">
             <h2>このツールについて</h2>
-            <p>文字をSVGに変換するためのツールです。<br>SVG画像・文字の幅・カーニングのデータが.zipファイルとして出力されます。</p>
+            <p>文字をSVGに変換するためのツールです。<br>結果をスプライトとして保存することもできます。</p>
             <h2>データの形式</h2>
             <p></p>
             <h2>フォント</h2>
@@ -43,6 +43,8 @@
             <p class="option" id="option-rect">コスチュームを表示したときに途切れるのを防止するための、480x360pxの透明な長方形を追加します。</p>
             <input type="checkbox" id="replace" name="option" value="replace" checked><label for="replace" class="checkbox">特殊な文字を別の文字列に置換</label>
             <p class="option" id="option-replace">「.」や「/」などの文字を、「-dot」や「-slash」などに置換して出力します。</p>
+            <input type="checkbox" id="uncompressed" name="option" value="uncompressed"><label for="uncompressed" class="checkbox">非圧縮で保存</label>
+            <p class="option" id="option-uncompressed">ファイルを非圧縮で保存します。(「.zip」か「.sprite3」で保存する場合)</p>
             <div id="svgs">
 
             </div>
