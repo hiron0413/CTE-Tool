@@ -1,13 +1,13 @@
 var chars = " ";
 const charsets = {
     number: "0123456789", 
-    uppercaseAlphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lowercaseAlphabet: "abcdefghijklmnopqrstuvwxyz",
+    u_alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    l_alphabet: "abcdefghijklmnopqrstuvwxyz",
     symbol1: ".,:;!?|#$%&()-=^~+*@_<>{}[]()\"'\\/",
-    symbol2: "€¥£₽₹₩¢¤§±×÷√≧≦≠≒≡¶-¥#Ωπτμ⋅∞§",
+    symbol2: "€¥£₽₹₩¢¤§±×÷¶⋅",
     u_greek: "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",
     l_greek: "αβγδεζηθικλμνξοπρστυφχψω",
-    hiragana: "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわゐゑをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉっゃゅょ",
+    hiragana: "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわゐゑをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉっゃゅょー",
     katakana: "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポァィゥェォッャュョヴ",
     kanji1: "一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六引羽雲園遠何科夏家歌画回会海絵外角楽活間丸岩顔汽記帰弓牛魚京強教近兄形計元言原戸古午後語工公広交光考行高黄合谷国黒今才細作算止市矢姉思紙寺自時室社弱首秋週春書少場色食心新親図数西声星晴切雪船線前組走多太体台地池知茶昼長鳥朝直通弟店点電刀冬当東答頭同道読内南肉馬売買麦半番父風分聞米歩母方北毎妹万明鳴毛門夜野友用曜来里理話悪安暗医委意育員院飲運泳駅央横屋温化荷界開階寒感漢館岸起期客究急級宮球去橋業曲局銀区苦具君係軽血決研県庫湖向幸港号根祭皿仕死使始指歯詩次事持式実写者主守取酒受州拾終習集住重宿所暑助昭消商章勝乗植申身神真深進世整昔全相送想息速族他打対待代第題炭短談着注柱丁帳調追定庭笛鉄転都度投豆島湯登等動童農波配倍箱畑発反坂板皮悲美鼻筆氷表秒病品負部服福物平返勉放味命面問役薬由油有遊予羊洋葉陽様落流旅両緑礼列練路和"
 };
@@ -125,8 +125,12 @@ class Sprite {
         }
     }
 
-    get toObject() {
+    get object() {
         return this.data;
+    }
+
+    get json() {
+        return JSON.stringify(this.data);
     }
 }
 
@@ -189,7 +193,7 @@ function downloadAsZip(data) {
     }
 
     var _option = {
-        type: "base64",
+        type: "blob",
     }
 
     if (!options["uncompressed"]) {
@@ -200,9 +204,9 @@ function downloadAsZip(data) {
     }
         
     zip.generateAsync(_option)
-    .then(function(content) {
-        download(content, ".zip");
-        //saveAs(content, font_name + ".zip");
+    .then(function(blob) {
+        download(blob, ".zip");
+        //downloadBlob(blob, font_name + ".zip");
     });
 }
 
@@ -233,7 +237,7 @@ function downloadAsSprite(data) {
         zip.file(md5(data.chars[i]) + ".svg", data.SVGText[i], {binary: false});
     }
 
-    zip.file("sprite.json", JSON.stringify(sprite.toObject));
+    zip.file("sprite.json", sprite.json);
 
     var _option = {
         type: "blob",
@@ -248,8 +252,8 @@ function downloadAsSprite(data) {
     }
   
     zip.generateAsync(_option)
-    .then(function(content) {
-        download(content, ".sprite3");
+    .then(function(blob) {
+        download(blob, ".sprite3");
         //saveAs(content, font_name + ".sprite3");
     });
 }
@@ -270,23 +274,36 @@ function uid() {
 
 function download(data, file_type) {
     if (file_type === ".zip") {
-        var uri = `data:${type[".zip"]};base64,${data}`;
+        var blob = data;
     } else if (file_type === ".sprite3") {
         var blob = data;
-        var uri = URL.createObjectURL(blob);
     } else {
         var blob = new Blob([data],{ type: type[file_type] });
-        var uri = URL.createObjectURL(blob);
     }
-    var a = document.createElement("a");
-    a.download = font_name + file_type;
-    a.href = uri;
-    if (!file_type === ".zip") {
-        a.type = blob.type;
+    if (navigator.msSaveOrOpenBlob) {
+        // for IE
+        navigator.msSaveOrOpenBlob(blob, filename);
+    } else if ('download' in HTMLAnchorElement.prototype) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a")
+        document.body.appendChild(a);
+        a.download = font_name + file_type;
+        a.href = url;
+        a.click();
+        window.setTimeout(() => {
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        }, 1E4);
+    } else {
+        // for iOS 12
+        var popup = window.open("", "_blank");
+        const reader = new FileReader();
+        reader.onloadend = function () {
+            popup.location.href = reader.result;
+            popup = null;
+        };
+        reader.readAsDataURL(blob);
     }
-    document.body.append(a);
-    a.click();
-    a.remove();
 }
 
 function isEmpty(obj) {
@@ -316,8 +333,13 @@ $(function(){
 
     $(".download").on("click", function() {
         chars = $("#chars").val();
+
+        if (!font) { alert("使うフォントをアップロードしてください"); return; }
+        if (!chars) { alert("使う文字が入力されていません"); return; }
+      
         setFontSize();
         data = fontTools.getData(font, chars.split(""), font_size);
+        
         var id = $(this).attr('id');
         switch (id) {
             case "downloadZip": downloadAsZip(data);

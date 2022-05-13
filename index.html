@@ -3,8 +3,8 @@
     <script type="text/javascript" src="//code.jquery.com/jquery-2.2.4.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.21.15/plugins/export/libs/FileSaver.js/FileSaver.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
     <script type="text/javascript" src="./main.js"></script>
 
     <title>font-to-svg</title>
@@ -28,8 +28,10 @@
                 <textarea id="chars"> </textarea>
                 <div id="checkboxes">
                     <input type="checkbox" id="number" name="charset" value="number"><label for="number" class="checkbox">数字</label>
-                    <input type="checkbox" id="uppercaseAlphabet" name="charset" value="uppercaseAlphabet"><label for="uppercaseAlphabet" class="checkbox">ABC</label>
-                    <input type="checkbox" id="lowercaseAlphabet" name="charset" value="lowercaseAlphabet"><label for="lowercaseAlphabet" class="checkbox">abc</label>
+                    <input type="checkbox" id="u_alphabet" name="charset" value="u_alphabet"><label for="u_alphabet" class="checkbox">ABC</label>
+                    <input type="checkbox" id="l_alphabet" name="charset" value="l_alphabet"><label for="l_alphabet" class="checkbox">abc</label>
+                    <input type="checkbox" id="u_greek" name="charset" value="u_greek"><label for="u_greek" class="checkbox">ギリシャ文字/大文字</label>
+                    <input type="checkbox" id="l_greek" name="charset" value="l_greek"><label for="l_greek" class="checkbox">ギリシャ文字/小文字</label>
                     <input type="checkbox" id="symbol1" name="charset" value="symbol1"><label for="symbol1" class="checkbox">記号1</label>
                     <input type="checkbox" id="symbol2" name="charset" value="symbol2"><label for="symbol2" class="checkbox">記号2</label>
                     <input type="checkbox" id="hiragana" name="charset" value="hiragana"><label for="hiragana" class="checkbox">ひらがな</label>
