@@ -3,23 +3,26 @@ const charsets = {
     number: "0123456789", 
     u_alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     l_alphabet: "abcdefghijklmnopqrstuvwxyz",
-    symbol1: ".,:;!?|#$%&()-=^~+*@_<>{}[]()\"'\\/",
+    symbol1: ".,:;!?|#$%&-=^~+*@_<>{}[]()\"'\\/‘’“”",
     symbol2: "€¥£₽₹₩¢¤§±×÷¶⋅",
     u_greek: "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",
     l_greek: "αβγδεζηθικλμνξοπρστυφχψω",
     hiragana: "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわゐゑをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽぁぃぅぇぉっゃゅょー",
-    katakana: "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポァィゥェォッャュョヴ",
-    kanji1: "一右雨円王音下火花貝学気九休玉金空月犬見五口校左三山子四糸字耳七車手十出女小上森人水正生青夕石赤千川先早草足村大男竹中虫町天田土二日入年白八百文木本名目立力林六引羽雲園遠何科夏家歌画回会海絵外角楽活間丸岩顔汽記帰弓牛魚京強教近兄形計元言原戸古午後語工公広交光考行高黄合谷国黒今才細作算止市矢姉思紙寺自時室社弱首秋週春書少場色食心新親図数西声星晴切雪船線前組走多太体台地池知茶昼長鳥朝直通弟店点電刀冬当東答頭同道読内南肉馬売買麦半番父風分聞米歩母方北毎妹万明鳴毛門夜野友用曜来里理話悪安暗医委意育員院飲運泳駅央横屋温化荷界開階寒感漢館岸起期客究急級宮球去橋業曲局銀区苦具君係軽血決研県庫湖向幸港号根祭皿仕死使始指歯詩次事持式実写者主守取酒受州拾終習集住重宿所暑助昭消商章勝乗植申身神真深進世整昔全相送想息速族他打対待代第題炭短談着注柱丁帳調追定庭笛鉄転都度投豆島湯登等動童農波配倍箱畑発反坂板皮悲美鼻筆氷表秒病品負部服福物平返勉放味命面問役薬由油有遊予羊洋葉陽様落流旅両緑礼列練路和"
+    katakana: "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヰヱヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポァィゥェォッャュョヴ"
 };
-const replace = {".": "-dot", "/": "-slash", "\\": "-back_slash", ":": "-colon"}
+const replace = {".": "-dot", "/": "-slash", "\\": "-back_slash", ":": "-colon", " ": "-space"}
 const type = { ".zip": "application/zip", ".txt": "text/plain", ".sprite3": "application/x.scratch.sprite3" }
-var options = { "rect": true, "replace": true, "uncompressed": false}
+var first_costume = "";
+var options = { "rect": true, "replace": true, "uncompressed": false, "script": false, "reset": false, "deleteAllMonitors": false };
 var checked = [];
 var font = {};
 var font_name = "";
-var font_size = 100;
-var data = {};
-var sprite_data = {};
+const font_size = 100;
+var cte_blocks = {};
+var project_data = {};
+var project_sb3 = {};
+var sb3_file_name = "";
+var svg_rect = { x: 0, y: 0, w: 480, h: 360 };
 
 class FontTools {
     getBoundingBox(font, char, size) {
@@ -29,14 +32,18 @@ class FontTools {
         return font.getAdvanceWidth(char, size);
     }
     getKerning(font, char1, char2, size) {
-        return font.getKerningValue(font.charToGlyph(char1), font.charToGlyph(char2)) * size / 1000;
+        return font.getKerningValue(font.charToGlyph(char1), font.charToGlyph(char2)) * size / font.unitsPerEm;
     }
     toPath(font, char, size) {
         return font.getPath(char, 240, 180, size).toPathData(3);
     }
-    toSVG(font, char, size, color = "#ff0000") {
+    toSVG(font, char, size, color = "#F00", rect = true) {
         const path = this.toPath(font, char, size);
-        return `<svg width="480px" height="360px" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="480" height="360" fill-opacity="0"/><path fill="${color}" d="${path}"/></svg>`;
+        if (rect) {
+            return `<svg width="480px" height="360px" xmlns="http://www.w3.org/2000/svg"><rect x="${svg_rect.x}" y="${svg_rect.y}" width="${svg_rect.w}" height="${svg_rect.h}" fill-opacity="0"/><path fill="${color}" d="${path}"/></svg>`;
+        } else {
+            return `<svg width="480px" height="360px" xmlns="http://www.w3.org/2000/svg"><path fill="${color}" d="${path}"/></svg>`;
+        }
     }
     getMaxMin(font, chars, size) {
         var yMaxList = [0];
@@ -59,34 +66,38 @@ class FontTools {
             "yMin": Math.min.apply(null, yMinList)
         }
     }
-    getData(font, chars, size, color = "#ff0000") {
+    getData(font, chars, size, color = "#ff0000", opts) {
         var SVGText = [];
         var w = [];
         var kern = [];
 
+        const ascender = font.ascender / font.unitsPerEm;
+        const descender = font.descender / font.unitsPerEm;
+        const line_gap = font.tables.hhea.lineGap / font.unitsPerEm;
+
         chars.forEach(_char => {
-            SVGText.push(this.toSVG(font, _char, size, color));
-            w.push(this.getWidth(font, _char, size));
+            SVGText.push(this.toSVG(font, _char, size, color, opts.rect));
+            w.push(this.getWidth(font, _char, 1));
             chars.forEach(_char2 => {
-                kern.push(this.getKerning(font, _char, _char2, size));
+                kern.push(this.getKerning(font, _char, _char2, 1));
             });
         });
 
-        return { chars: chars, SVGText: SVGText, width: w, kerning: kern };
+        return { chars: chars, SVGText: SVGText, width: w, kerning: kern, ascender: ascender, descender: descender, lineGap: line_gap };
     }
 }
 
 class Sprite {
     constructor(data) {
-        this.data = data
+        this.data = data;
     }
 
     setVariable(name, data) {
         const ids = Object.keys(this.data.variables);
         const values = Object.values(this.data.variables);
         for (let i = 0; i < ids.length; i++) {
-            if (values[i] === name) {
-                this.data[ids[i]][1] = data;
+            if (values[i][0] === name) {
+                this.data.variables[ids[i]][1] = data;
                 return;
             }
         }
@@ -98,8 +109,8 @@ class Sprite {
         const ids = Object.keys(this.data.lists);
         const values = Object.values(this.data.lists);
         for (let i = 0; i < ids.length; i++) {
-            if (values[i] === name) {
-                this.data[ids[i]][1] = data;
+            if (values[i][0] === name) {
+                this.data.lists[ids[i]][1] = data;
                 return;
             }
         }
@@ -108,12 +119,12 @@ class Sprite {
     }
 
     addCostume(name, svg) {
-        const data = this.generateCostumeData(name);
+        const data = this.generateCostumeData(name, svg);
         this.data.costumes.push(data);
     }
 
-    generateCostumeData(name) {
-        const md5_text = md5(name);
+    generateCostumeData(name, svg) {
+        const md5_text = md5(svg);
         return {
             assetId: md5_text,
             name: name,
@@ -121,8 +132,133 @@ class Sprite {
             md5ext: md5_text + ".svg",
             dataFormat: "svg",
             rotationCenterX: 240,
-            rotationCenterY: 240
+            rotationCenterY: 180
         }
+    }
+
+    get object() {
+        return this.data;
+    }
+
+    get json() {
+        return JSON.stringify(this.data);
+    }
+}
+
+class Project {
+    constructor(data) {
+        this.data = data;
+    }
+
+    getSpriteIndex(name) {
+        const targets = this.data.targets;
+        for (let i = 0; i < targets.length; i++) {
+            if (targets[i].name === name) {
+                return i;
+            }
+        }
+        return "Not found";
+    }
+
+    setProperty(spriteIndex, property, data) {
+        if (this.data.targets[spriteIndex].hasOwnProperty(property)) {
+            this.data.targets[spriteIndex][property] = data;
+        } else {
+            return "Not found";
+        }
+    }
+
+    getProperty(spriteIndex, property) {
+        if (this.data.targets[spriteIndex].hasOwnProperty(property)) {
+            return this.data.targets[spriteIndex][property];
+        } else {
+            return "Not found";
+        }
+    }
+  
+    setVariable(spriteIndex, name, data) {
+        const ids = Object.keys(this.data.targets[spriteIndex].variables);
+        const values = Object.values(this.data.targets[spriteIndex].variables);
+        for (let i = 0; i < ids.length; i++) {
+            if (values[i][0] === name) {
+                this.data.targets[spriteIndex].variables[ids[i]][1] = data;
+                return;
+            }
+        }
+        const id = uid();
+        this.data.targets[spriteIndex].variables[id] = [name, data];
+    }
+
+    getList(spriteIndex, name) {
+        const ids = Object.keys(this.data.targets[spriteIndex].lists);
+        const values = Object.values(this.data.targets[spriteIndex].lists);
+        for (let i = 0; i < ids.length; i++) {
+            if (values[i][0] === name) {
+                return this.data.targets[spriteIndex].lists[ids[i]][1];
+            }
+        }
+        return "Not found"
+    }
+
+    setList(spriteIndex, name, data) {
+        const ids = Object.keys(this.data.targets[spriteIndex].lists);
+        const values = Object.values(this.data.targets[spriteIndex].lists);
+        for (let i = 0; i < ids.length; i++) {
+            if (values[i][0] === name) {
+                this.data.targets[spriteIndex].lists[ids[i]][1] = data;
+                return;
+            }
+        }
+        const id = uid();
+        this.data.targets[spriteIndex].lists[id] = [name, data];
+    }
+
+    appendList(spriteIndex, name, data) {
+        const ids = Object.keys(this.data.targets[spriteIndex].lists);
+        const values = Object.values(this.data.targets[spriteIndex].lists);
+        for (let i = 0; i < ids.length; i++) {
+            if (values[i][0] === name) {
+                this.data.targets[spriteIndex].lists[ids[i]][1] = this.data.targets[spriteIndex].lists[ids[i]][1].concat(data);
+                return;
+            }
+        }
+        const id = uid();
+        this.data.targets[spriteIndex].lists[id] = [name, data];
+    }
+
+    setBlocks(spriteIndex, data) {
+        this.data.targets[spriteIndex].blocks = data;
+    }
+
+    addCostume(spriteIndex, name, svg, zip) {
+        const data = this.generateCostumeData(name, svg);
+        this.data.targets[spriteIndex].costumes.push(data);
+        zip.file(data.md5ext, svg);
+    }
+
+    generateCostumeData(name, svg) {
+        const md5_text = md5(svg);
+        return {
+            assetId: md5_text,
+            name: name,
+            bitmapResolution: 1,
+            md5ext: md5_text + ".svg",
+            dataFormat: "svg",
+            rotationCenterX: 240,
+            rotationCenterY: 180
+        }
+    }
+
+    deleteAllCostumes(spriteIndex) {
+        this.data.targets[spriteIndex].costumes = [];
+    }
+
+    changeSpriteName(spriteIndex, name) {
+        this.data.targets[spriteIndex].name = name;
+    }
+
+    deleteAllMonitors() {
+        this.data.monitors = [];
     }
 
     get object() {
@@ -155,21 +291,44 @@ function openFont(file) {
     reader.onload = function() {
         font = opentype.parse(reader.result);
         font_name = font.names.fullName.en;
-        setFontSize()
+        setRectSize();
     }
 
     reader.readAsArrayBuffer(file);
 }
 
-function setFontSize() {
-    const maxMin = fontTools.getMaxMin(font, chars.split(""), 100);
-    font_size = 0.9 * 100 / Math.max(
-        maxMin.xMax / 240, 
-        maxMin.xMin / -240, 
-        maxMin.yMax / 180, 
-        maxMin.yMin / -180,
-        1E-3
-        );
+function openSb3(file) {
+    var reader = new FileReader();
+    reader.onload = function() {
+        JSZip.loadAsync(reader.result)
+            .then(zip => {
+                project_sb3 = zip
+                zip.file("project.json").async("string")
+                    .then(data => { 
+                        project_data = JSON.parse(data);
+                    })
+            });
+    }
+
+    reader.readAsArrayBuffer(file);
+}
+
+function setRectSize() {
+    const maxMin = fontTools.getMaxMin(font, chars.split(""), font_size);
+    svg_rect.x = maxMin.xMin + 240 - 10;
+    svg_rect.y = maxMin.yMin + 180 - 10;
+    svg_rect.w = maxMin.xMax - maxMin.xMin + 20;
+    svg_rect.h = maxMin.yMax - maxMin.yMin + 20;
+}
+
+function splitExt(file) {
+    const re = /(.*)\.(.+?$)/
+    var result = re.exec(file)
+    return { basename: result[1], ext: result[2] }
+}
+
+function deepcopy(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }
 
 function downloadAsZip(data) {
@@ -205,8 +364,7 @@ function downloadAsZip(data) {
         
     zip.generateAsync(_option)
     .then(function(blob) {
-        download(blob, ".zip");
-        //downloadBlob(blob, font_name + ".zip");
+        download(blob, font_name, ".zip");
     });
 }
 
@@ -217,31 +375,68 @@ function downloadAsTxt(data) {
     txt.push(data.width.join("\n"));
     txt.push(data.kerning.join("\n"));
     txt = txt.join("\n-----\n");
-    download(txt, ".txt");
+    download(txt, font_name, ".txt");
 }
 
-function downloadAsSprite(data) {
-    var zip = new JSZip();
-    var sprite = new Sprite(sprite_data);
+function downloadAsProject(sb3, data, file_name) {
+    var project = new Project(deepcopy(project_data));
+    const _cte = first_costume ? first_costume : _svg(0, 0);
+    const _big = _svg(480, 360, '<rect x="0" y="0" width="480" height="360" fill="#fff"/>');
+    const _medium = _svg(480, 360, '<rect x="190" y="130" width="100" height="100" fill="#fff"/>');
+    const _small = _svg(0,0);
+    const fontID = "$" + fid(10);
 
-    sprite.data.name = font_name;
-
-    sprite.setVariable("_@chars", data.chars.length);
-
-    sprite.setList("_@chars", data.chars);
-    sprite.setList("_@width", data.width);
-    sprite.setList("_@kerning", data.kerning);
-
-    for (let i = 0; i < data.chars.length; i++) {
-        sprite.addCostume("=" + data.chars[i], data.SVGText[i]);
-        zip.file(md5(data.chars[i]) + ".svg", data.SVGText[i], {binary: false});
+    var sprite_index = project.getSpriteIndex("*CTE*");
+    if (sprite_index === "Not found") { alert("スプライト「*CTE*」が見つかりませんでした"); return; }
+  
+    var fonts = Math.round(project.getList(sprite_index, "CTE | @fonts").length / 7);
+    var costumes = project.getProperty(sprite_index, "costumes");
+    
+    if (options["reset"]) {
+        // delete all fonts
+        costumes.forEach(costume => { sb3.remove(costume.md5ext) });
+        project.deleteAllCostumes(sprite_index);
+        project.setList(0, "CTE | フォント一覧")
+        project.setList(sprite_index, "CTE | @fonts", []);
+        project.setList(sprite_index, "CTE | @width", []);
+        project.setList(sprite_index, "CTE | @kerning", []);
+        fonts = 0;
+        project.addCostume(sprite_index, "CTE", _cte, sb3);
+        project.addCostume(sprite_index, "big", _big, sb3);
+        project.addCostume(sprite_index, "medium", _medium, sb3);
+        project.addCostume(sprite_index, "small", _small, sb3);
+        costumes = project.getProperty(sprite_index, "costumes");
+    }
+  
+    if (options["script"]) { 
+        // reset blocks
+        project.setProperty(sprite_index, "blocks", cte_blocks);
     }
 
-    zip.file("sprite.json", sprite.json);
+    project.setProperty(sprite_index, "name", "CTE");
+    if (options["deleteMonitors"]) {
+        project.deleteAllMonitors();
+    }
+
+    // add data
+    project.appendList(sprite_index, "CTE | @fonts", [fontID, font_name, data.chars.length, costumes.length + 1, data.ascender, data.descender, data.lineGap]);
+    project.appendList(0, "CTE | フォント一覧", [font_name])
+    project.appendList(sprite_index, "CTE | @width", [fontID].concat(data.width));
+    project.appendList(sprite_index, "CTE | @kerning", [fontID].concat(data.kerning));
+
+    // add chars
+    for (let i = 0; i < data.chars.length; i++) {
+        const char = data.chars[i];
+        const SVG = data.SVGText[i];
+        const name = "=" + char + "/" + String(fonts + 1);
+        project.addCostume(sprite_index, name, SVG, sb3);
+    }
+
+    sb3.file("project.json", project.json);
 
     var _option = {
         type: "blob",
-        mimeType: "application/x.scratch.sprite3",
+        mimeType: "application/x.scratch.sb3",
     }
 
     if (!options["uncompressed"]) {
@@ -251,11 +446,15 @@ function downloadAsSprite(data) {
         }
     }
   
-    zip.generateAsync(_option)
+    sb3.generateAsync(_option)
     .then(function(blob) {
-        download(blob, ".sprite3");
-        //saveAs(content, font_name + ".sprite3");
+        download(blob, file_name, ".sb3");
+        //saveAs(content, font_name + ".sb3");
     });
+
+    function _svg(w = 480, h = 360, text) {
+        return `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">` + text + "</svg>"
+    }
 }
 
 function md5(text) {
@@ -267,27 +466,38 @@ function uid() {
     const _chars = "!#%()*+,-./:;=?@[]^_`{|}~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const _len = _chars.length;
     for (let i = 0; i < 20; i++) {
-        id += _chars.charAt(Math.random() * _len);
+        id += _chars.charAt(Math.floor(Math.random() * _len));
     }
     return id;
 }
 
-function download(data, file_type) {
-    if (file_type === ".zip") {
-        var blob = data;
-    } else if (file_type === ".sprite3") {
-        var blob = data;
-    } else {
-        var blob = new Blob([data],{ type: type[file_type] });
+function fid(len) {
+    // fontID generator
+    var id = "";
+    const _chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+    const _len = _chars.length;
+    for (let i = 0; i < len; i++) {
+        id += _chars.charAt(Math.floor(Math.random() * _len));
+    }
+    return id;
+}
+
+function download(data, file_name, file_type) {
+    var blob;
+    switch(file_type) {
+        case ".zip": blob = data; break;
+        case ".sprite3": blob = data; break;
+        case ".sb3": blob = data; break;
+        default: blob = new Blob([data],{ type: type[file_type] });
     }
     if (navigator.msSaveOrOpenBlob) {
         // for IE
         navigator.msSaveOrOpenBlob(blob, filename);
-    } else if ('download' in HTMLAnchorElement.prototype) {
+    } else if ("download" in HTMLAnchorElement.prototype) {
         var url = URL.createObjectURL(blob);
         var a = document.createElement("a")
         document.body.appendChild(a);
-        a.download = font_name + file_type;
+        a.download = file_name + file_type;
         a.href = url;
         a.click();
         window.setTimeout(() => {
@@ -298,7 +508,7 @@ function download(data, file_type) {
         // for iOS 12
         var popup = window.open("", "_blank");
         const reader = new FileReader();
-        reader.onloadend = function () {
+        reader.onloadend = function() {
             popup.location.href = reader.result;
             popup = null;
         };
@@ -315,10 +525,20 @@ var fontTools = new FontTools();
 $(function(){
     changeOptions();
 
+    $.ajax({ url: "first_costume.txt" }).done(svg => { first_costume = svg; });
+    $.getJSON("blocks.json").done(json => { cte_blocks = json });
+
     $("#uploadFont").on("change", function() {
         var font_file = $(this).prop('files')[0];
         $("#fontFile").text(font_file.name);
         openFont(font_file);
+    });
+
+    $("#uploadSb3").on("change", function() {
+        var sb3_file = $(this).prop('files')[0];
+        $("#sb3File").text(sb3_file.name);
+        openSb3(sb3_file);
+        sb3_file_name = splitExt(sb3_file.name).basename;
     });
 
     $("input[name=charset]").on("change", function() {
@@ -334,31 +554,24 @@ $(function(){
     $(".download").on("click", function() {
         chars = $("#chars").val();
 
-        if (!font) { alert("使うフォントをアップロードしてください"); return; }
+        if (isEmpty(font)) { alert("使うフォントをアップロードしてください"); return; }
         if (!chars) { alert("使う文字が入力されていません"); return; }
-      
-        setFontSize();
-        data = fontTools.getData(font, chars.split(""), font_size);
+        setRectSize();
+        const font_data = fontTools.getData(font, chars.split(""), font_size, "#ff0000", { rect: options.rect });
         
         var id = $(this).attr('id');
         switch (id) {
-            case "downloadZip": downloadAsZip(data);
+            case "downloadZip": downloadAsZip(font_data); break;
 
-            case "downloadTxt": downloadAsTxt(data);
+            case "downloadTxt": downloadAsTxt(font_data); break;
 
-            case "downloadSprite3": 
-                if (isEmpty(sprite_data)) {
-                    $.getJSON("sprite.json")
-                    .done(function (json) {
-                        sprite_data = JSON.parse(JSON.stringify(json));
-                        downloadAsSprite(data);
-                    })
-                    .error(function () {
-                        alart("jsonファイルの読み込みに失敗しました");
-                    });
+            case "downloadSb3":
+                if (isEmpty(project_data)) {
+                    alert("sb3ファイルがアップロードされていません")
                 } else {
-                    downloadAsSprite(data);
+                    downloadAsProject(project_sb3, font_data, sb3_file_name);
                 }
+                break;
         }
     });
 });

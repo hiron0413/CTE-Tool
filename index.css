@@ -5,12 +5,11 @@ body {
     max-width: 1000px;
     margin: auto;
     background: #f4fff5;
-    -webkit-tap-highlight-color:rgba(0,0,0,0);
 }
 
 #main {
     font-family: 'Noto Sans JP', sans-serif;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
 }
 
 h1 {
@@ -38,16 +37,26 @@ p {
     padding-right: 10px;
 }
 
+a {
+    color: #00da98;
+    text-decoration: none;
+    background: linear-gradient(transparent 93%, #00da98 93%);
+}
+
+.library {
+    font-size: 1.5em;
+}
+
 #downloadBtns {
-    padding: 40px 0px 0px;
+    padding: 40px 0px 20px;
 }
 
 .download {
     display: block;
-    font-size: 1.5em;
+    font-size: 1.7em;
     font-family: 'Noto Sans JP', sans-serif;
     font-weight: 700;
-    padding: 20px 20px;
+    padding: 30px 20px;
     margin: 20px 0px;
     width: 100%;
     text-align: center;
@@ -60,7 +69,7 @@ p {
     cursor: pointer;
 }
 
-#uploadFont {
+.fileUpload {
     display: none;
 }
 
@@ -77,7 +86,7 @@ p {
     user-select: none;
 }
 
-#fontFile {
+.fileName {
     margin-left: 10px;
     color: #40504b;
     font-size: 1.1em;

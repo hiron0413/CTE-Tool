@@ -4,25 +4,26 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
     <script type="text/javascript" src="./main.js"></script>
 
-    <title>font-to-svg</title>
+    <title>add font to project</title>
     <meta name="description" content="文字をSVGに変換するツール">
 
     <link rel="stylesheet" type="text/css" href="index.css" />
 </head>
 <body>
     <div id="main">
-        <h1>Font to SVG</h1>
+        <h1>CTE Tool</h1>
         <div class="container">
             <h2>このツールについて</h2>
-            <p>文字をSVGに変換するためのツールです。<br>結果をスプライトとして保存することもできます。</p>
-            <h2>データの形式</h2>
-            <p></p>
+            <p><a href="https://scratch.mit.edu/projects/690457555/"><b>クローンテキストエンジン</b></a>を利用するためのツールです。<br>「*CTE*」という名前のスプライトに文字とそのデータが追加されます。(元あったコスチュームは消去されます。)</p>
+            <h2>元のプロジェクト</h2>
+            <p>元のプロジェクトには、<b>*CTE*</b>という名前のスプライトが含まれている必要があります。</p>
+            <input type="file" class="button fileUpload" id="uploadSb3"><label for="uploadSb3" class="file">ファイルを選択</label>
+            <span class="fileName" id="sb3File"></span>
             <h2>フォント</h2>
-            <input type="file" class="button" id="uploadFont" accept=".otf,.ttf,.woff"><label for="uploadFont" class="file">ファイルを選択</label>
-            <span id="fontFile"></span>
+            <input type="file" class="button fileUpload" id="uploadFont" accept=".otf,.ttf,.woff"><label for="uploadFont" class="file">ファイルを選択</label>
+            <span class="fileName" id="fontFile"></span>
             <h2>使う文字</h2>
             <div id="charsToUse">
                 <textarea id="chars"> </textarea>
@@ -36,25 +37,29 @@
                     <input type="checkbox" id="symbol2" name="charset" value="symbol2"><label for="symbol2" class="checkbox">記号2</label>
                     <input type="checkbox" id="hiragana" name="charset" value="hiragana"><label for="hiragana" class="checkbox">ひらがな</label>
                     <input type="checkbox" id="katakana" name="charset" value="katakana"><label for="katakana" class="checkbox">カタカナ</label>
-                    <input type="checkbox" id="kanji1" name="charset" value="kanji1"><label for="kanji1" class="checkbox">漢字 / 小学校低学年</label>
                 </div>
             </div>
             
             <h2>設定</h2>
             <input type="checkbox" id="rect" name="option" value="rect" checked><label for="rect" class="checkbox">途切れの防止</label>
-            <p class="option" id="option-rect">コスチュームを表示したときに途切れるのを防止するための、480x360pxの透明な長方形を追加します。</p>
-            <input type="checkbox" id="replace" name="option" value="replace" checked><label for="replace" class="checkbox">特殊な文字を別の文字列に置換</label>
-            <p class="option" id="option-replace">「.」や「/」などの文字を、「-dot」や「-slash」などに置換して出力します。</p>
+            <p class="option" id="option-rect">コスチュームを表示したときに途切れるのを防止するための、透明な長方形を追加します。</p>
             <input type="checkbox" id="uncompressed" name="option" value="uncompressed"><label for="uncompressed" class="checkbox">非圧縮で保存</label>
-            <p class="option" id="option-uncompressed">ファイルを非圧縮で保存します。(「.zip」か「.sprite3」で保存する場合)</p>
-            <div id="svgs">
-
-            </div>
+            <p class="option" id="option-uncompressed">ファイルを非圧縮で保存します。</p>
+            <input type="checkbox" id="script" name="option" value="script"><label for="script" class="checkbox">スクリプトを置き換える</label>
+            <p class="option" id="option-script">元あったスクリプトを削除し、CTEのスクリプトに置き換えます。</p>
+            <input type="checkbox" id="reset" name="option" value="reset"><label for="reset" class="checkbox">元あったフォントを削除</label>
+            <p class="option" id="option-reset">元あったすべてのフォントとそのデータを削除します。</p>
             <div id="downloadBtns">
-                <button id="downloadSprite3" class="download">スプライトとして保存(.sprite3)</button>
-                <button id="downloadZip" class="download">保存(.zip)</button>
-                <button id="downloadTxt" class="download">保存(.txt)</button>
+                <button id="downloadSb3" class="download">プロジェクトとして保存(.sb3)</button>
+                <!--<button id="downloadSprite3" class="download">スプライトとして保存(.sprite3)</button>-->
+                <!--<button id="downloadZip" class="download">保存(.zip)</button>
+                <button id="downloadTxt" class="download">保存(.txt)</button>-->
             </div>
+            <h2>使用したライブラリ</h2>
+            <p><a href="https://github.com/jquery/jquery" class="library"><b>jQuery</b></a><br>
+            <a href="https://github.com/opentypejs/opentype.js" class="library"><b>opentype.js</b></a><br>
+            <a href="https://github.com/Stuk/jszip" class="library"><b>JSZip</b></a><br>
+            <a href="https://github.com/brix/crypto-js" class="library"><b>crypto-js</b></a></p>
         </div>
     </div>
 </body>
