@@ -526,15 +526,16 @@ var fontTools = new FontTools();
 
 $(function(){
     changeOptions();
-
-    $.ajax({ url: "first_costume.txt" }).done(svg => { first_costume = svg; });
+    
     $.when(
+        $.ajax({ url: "first_costume.txt" }),
         $.getJSON("blocks.json"), 
         $.getJSON("variables.json")
-    ).done((blocks, vars) => {
+    ).done((svg, blocks, vars) => {
+        first_costume = svg;
         cte_blocks = blocks;
         cte_vars = vars;
-    }
+    });
 
     $("#uploadFont").on("change", function() {
         var font_file = $(this).prop('files')[0];
