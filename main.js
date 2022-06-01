@@ -19,6 +19,7 @@ var font = {};
 var font_name = "";
 const font_size = 100;
 var cte_blocks = {};
+var cte_vars = {};
 var project_data = {};
 var project_sb3 = {};
 var sb3_file_name = "";
@@ -411,6 +412,7 @@ function downloadAsProject(sb3, data, file_name) {
     if (options["script"]) { 
         // reset blocks
         project.setProperty(sprite_index, "blocks", cte_blocks);
+        project.setProperty(sprite_index, "variables", cte_vars);
     }
 
     project.setProperty(sprite_index, "name", "CTE");
@@ -526,7 +528,8 @@ $(function(){
     changeOptions();
 
     $.ajax({ url: "first_costume.txt" }).done(svg => { first_costume = svg; });
-    $.getJSON("blocks.json").done(json => { cte_blocks = json });
+    $.getJSON("blocks.json").done(json => { cte_blocks = json; });
+    $.getJSON("variables.json").done(json => { cte_vars = json; });
 
     $("#uploadFont").on("change", function() {
         var font_file = $(this).prop('files')[0];
