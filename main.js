@@ -396,7 +396,7 @@ function downloadAsProject(sb3, data, file_name) {
         // delete all fonts
         costumes.forEach(costume => { sb3.remove(costume.md5ext) });
         project.deleteAllCostumes(sprite_index);
-        project.setList(0, "CTE | フォント一覧")
+        project.setList(0, "CTE | フォント一覧", [])
         project.setList(sprite_index, "CTE | @fonts", []);
         project.setList(sprite_index, "CTE | @width", []);
         project.setList(sprite_index, "CTE | @kerning", []);
