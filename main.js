@@ -528,8 +528,13 @@ $(function(){
     changeOptions();
 
     $.ajax({ url: "first_costume.txt" }).done(svg => { first_costume = svg; });
-    $.getJSON("blocks.json").done(json => { cte_blocks = json; });
-    $.getJSON("variables.json").done(json => { cte_vars = json; });
+    $.when(
+        $.getJSON("blocks.json"), 
+        $.getJSON("variables.json")
+    ).done((blocks, vars) => {
+        cte_blocks = blocks;
+        cte_vars = vars;
+    }
 
     $("#uploadFont").on("change", function() {
         var font_file = $(this).prop('files')[0];
