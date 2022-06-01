@@ -532,9 +532,9 @@ $(function(){
         $.getJSON("blocks.json"), 
         $.getJSON("variables.json")
     ).done((svg, blocks, vars) => {
-        first_costume = svg[1];
-        cte_blocks = blocks.responseJSON;
-        cte_vars = vars.responseJSON;
+        first_costume = svg[0];
+        cte_blocks = blocks[0];
+        cte_vars = vars[0];
     });
 
     $("#uploadFont").on("change", function() {
