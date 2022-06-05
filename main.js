@@ -528,9 +528,9 @@ $(function(){
     changeOptions();
     
     $.when(
-        $.ajax({ url: "first_costume.txt" }),
-        $.getJSON("blocks.json"), 
-        $.getJSON("variables.json")
+        $.ajax({ url: "data/first_costume.txt" }),
+        $.getJSON("data/blocks.json"), 
+        $.getJSON("data/variables.json")
     ).done((svg, blocks, vars) => {
         first_costume = svg[0];
         cte_blocks = blocks[0];
